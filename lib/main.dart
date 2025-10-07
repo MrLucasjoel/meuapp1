@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'src/app/meuApp.dart';
+import 'package:meuapp/src/app/app_widget.dart';
+import 'dart:io';
+import 'dart:ui';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const MeuApp());
 }

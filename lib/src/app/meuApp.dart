@@ -9,7 +9,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Estrutura de um app Flutter',
       theme: ThemeData(
-        primarySwatch: Colors.blue[700],
+        primaryColorDark:const Color.fromARGB(255, 32, 106, 167)
       ),
       home: Scaffold(
         body: Center(
@@ -17,7 +17,7 @@ class MainApp extends StatelessWidget {
         ),
       ),
     );
-  },
+  }
 }
 
 class TelaAppBar extends StatelessWidget {
@@ -29,18 +29,18 @@ class TelaAppBar extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'DEVS2BLU First App',
-          style: TextStyle(color: Colors.white,[700]
+          style: TextStyle(color: Color.fromARGB(255, 0, 255, 85),
           ),
         ),
-        backgroundColor: Colors.red[700],
+        backgroundColor: const Color.fromARGB(255, 54, 130, 244),
       ),
       body: Center(
         child: Text(
           'E ai galera!!',
-          style: TextStyle(fontSize: 20, color: Colors.blue[900],
+          style: TextStyle(fontSize: 20, color: const Color.fromARGB(255, 33, 243, 61),
           ),
         ),
       ),
     );
-  },
+  }
 }
