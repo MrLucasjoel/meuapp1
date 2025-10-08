@@ -12,3 +12,10 @@ final ThemeData appTheme = ThemeData(
   textTheme: FontTheme.textTheme,
   scaffoldBackgroundColor: AppColors.background,
 );
+
+
+import 'package:google_fonts/google_fonts.dart';
+
+class FontTheme {
+  static TextTheme get textTheme => GoogleFonts.latoTextTheme();
+}
