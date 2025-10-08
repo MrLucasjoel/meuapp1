@@ -1,0 +1,14 @@
+import 'package:flutter/material.dart';
+import 'font_theme.dart';
+import 'color_theme.dart'; // Se tiver criado
+
+final ThemeData appTheme = ThemeData(
+  colorScheme: ColorScheme.light(
+    primary: AppColors.primary,
+    onPrimary: AppColors.onPrimary,
+    background: AppColors.background,
+    onBackground: AppColors.onBackground,
+  ),
+  textTheme: FontTheme.textTheme,
+  scaffoldBackgroundColor: AppColors.background,
+);

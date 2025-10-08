@@ -118,13 +118,25 @@ class _LoginViewState extends State<LoginView> {
                         color: Colors.white,
                         strokeWidth: 2,
                       )
-                          : const Text("Entrar", style: TextStyle(fontSize: 18)),
+                          : const Text(
+                          "Entrar",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black
+                          )
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
                   TextButton(
                     onPressed: _abrirCadastro,
-                    child: const Text("Não tem conta? Cadastre-se"),
+                    child: const Text(
+                      "Não tem conta? Cadastre-se",
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black
+                      ),
+                    ),
                   ),
                 ],
               ),
