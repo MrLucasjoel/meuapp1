@@ -4,5 +4,5 @@ import 'dart:io';
 import 'dart:ui';
 
 void main() {
-  runApp(const MeuApp());
+  runApp(const AppWidget());
 }

@@ -7,7 +7,6 @@ class LoginController {
     if (user == "admin" && password == "12345") {
       return LoginModel(user: user, password: password);
     }
-
-    return null; // login falhou
+    return null;
   }
 }

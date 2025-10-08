@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:meuapp/src/controller/login_controller.dart';
+import 'package:meuapp/src/app/app_routes.dart';
 import 'package:meuapp/src/view/registro_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -11,38 +10,27 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final _controller = LoginController();
-  final _userController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  bool _carregando = false;
+  bool _loading = false;
   String? _erro;
 
-  Future<void> _login() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _carregando = true);
+  void _login() {
+    if (!_formKey.currentState!.validate()) return;
 
-      final usuario = await _controller.autenticar(
-        _userController.text,
-        _passwordController.text,
-      );
+    setState(() => _loading = true);
 
-      setState(() => _carregando = false);
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() => _loading = false);
 
-      if (usuario != null) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('user_email', usuario.user);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Bem-vindo, ${usuario.user}!')),
-        );
-
-        Navigator.pushReplacementNamed(context, '/home');
+      if (_emailController.text == "admin" && _passwordController.text == "12345") {
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
       } else {
-        setState(() => _erro = 'Usuário ou senha inválidos');
+        setState(() => _erro = "Usuário ou senha inválidos");
       }
-    }
+    });
   }
 
   void _abrirCadastro() {
@@ -55,47 +43,89 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Center(
-            child: SingleChildScrollView(
+      backgroundColor: Colors.blue[50],
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextFormField(
-                    controller: _userController,
-                    decoration: const InputDecoration(labelText: 'Usuário / Email'),
-                    validator: (v) => v == null || v.isEmpty ? 'Informe o usuário' : null,
+                  const Icon(Icons.lock, size: 100, color: Colors.blue),
+                  const SizedBox(height: 24),
+                  Text(
+                    "Bem-vindo",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Faça login para continuar",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 32),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: "E-mail",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      prefixIcon: const Icon(Icons.email),
+                    ),
+                    validator: (value) =>
+                    value == null || value.isEmpty ? "Informe o e-mail" : null,
+                  ),
+                  const SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(labelText: 'Senha'),
                     obscureText: true,
-                    validator: (v) => v == null || v.isEmpty ? 'Informe a senha' : null,
+                    decoration: InputDecoration(
+                      labelText: "Senha",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      prefixIcon: const Icon(Icons.lock),
+                    ),
+                    validator: (value) =>
+                    value == null || value.isEmpty ? "Informe a senha" : null,
                   ),
-                  const SizedBox(height: 20),
-                  _carregando
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                    onPressed: _login,
-                    child: const Text('Entrar'),
+                  const SizedBox(height: 16),
+                  if (_erro != null)
+                    Text(
+                      _erro!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: _loading ? null : _login,
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: _loading
+                          ? const CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      )
+                          : const Text("Entrar", style: TextStyle(fontSize: 18)),
+                    ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   TextButton(
                     onPressed: _abrirCadastro,
-                    child: const Text('Não tem conta? Cadastre-se'),
+                    child: const Text("Não tem conta? Cadastre-se"),
                   ),
-                  if (_erro != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12),
-                      child: Text(
-                        _erro!,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
                 ],
               ),
             ),

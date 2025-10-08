@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:meuapp/src/controller/registro_controller.dart';
 
 class RegistroView extends StatefulWidget {
   const RegistroView({super.key});
@@ -9,208 +8,149 @@ class RegistroView extends StatefulWidget {
 }
 
 class _RegistroViewState extends State<RegistroView> {
-  final _controller = RegistroController();
-  bool _carregando = false;
+  final _formKey = GlobalKey<FormState>();
+  final _nomeController = TextEditingController();
+  final _cpfController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _dataNascController = TextEditingController();
+  final _telefoneController = TextEditingController();
+  final _cepController = TextEditingController();
+  final _enderecoController = TextEditingController();
+  final _numeroController = TextEditingController();
+  final _cidadeController = TextEditingController();
+
+  String? _ufSelecionado;
+  String? _estadoCivilSelecionado;
+  bool _loading = false;
 
   final List<String> _ufs = [
-    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES',
-    'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR',
-    'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC',
-    'SP', 'SE', 'TO',
+    'AC','AL','AP','AM','BA','CE','DF','ES','GO','MA',
+    'MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN',
+    'RS','RO','RR','SC','SP','SE','TO'
   ];
-
   final List<String> _estadosCivis = [
-    'Solteiro',
-    'Casado',
-    'Divorciado',
-    'Viúvo',
-    'União Estável'
+    'Solteiro','Casado','Divorciado','Viúvo','União Estável'
   ];
 
   void _registrar() {
-    FocusScope.of(context).unfocus();
-    setState(() => _carregando = true);
+    if (!_formKey.currentState!.validate()) return;
 
-    final usuario = _controller.validarEConstruirUsuario();
+    setState(() => _loading = true);
 
-    setState(() => _carregando = false);
-
-    if (usuario != null) {
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() => _loading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Usuário cadastrado com sucesso!')),
+        const SnackBar(content: Text(
+            'Cadastro realizado com sucesso!'
+        )),
       );
-      _controller.limparCampos();
       Navigator.pop(context);
-    } else if (_controller.erro != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_controller.erro!)),
-      );
-    }
+    });
+  }
+
+  InputDecoration _inputDecoration(String label, IconData icon) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Cadastro de Usuário"),
-        backgroundColor: const Color(0xFF206AA7),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _controller.formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Nome completo
-              TextFormField(
-                controller: _controller.nomeController,
-                decoration: const InputDecoration(labelText: "Nome completo"),
-                validator: (value) =>
-                value == null || value.isEmpty ? "Campo obrigatório" : null,
-              ),
-              const SizedBox(height: 10),
-
-              // CPF
-              TextFormField(
-                controller: _controller.cpfController,
-                decoration: const InputDecoration(labelText: "CPF"),
-                keyboardType: TextInputType.number,
-                validator: (value) =>
-                value == null || value.isEmpty ? "Campo obrigatório" : null,
-              ),
-              const SizedBox(height: 10),
-
-              // Email
-              TextFormField(
-                controller: _controller.emailController,
-                decoration: const InputDecoration(labelText: "E-mail"),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) return "Campo obrigatório";
-                  if (!value.contains("@")) return "E-mail inválido";
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-
-              // Data de nascimento
-              TextFormField(
-                controller: _controller.dataNascController,
-                decoration:
-                const InputDecoration(labelText: "Data de Nascimento"),
-                keyboardType: TextInputType.datetime,
-                validator: (value) =>
-                value == null || value.isEmpty ? "Campo obrigatório" : null,
-              ),
-              const SizedBox(height: 10),
-
-              // Telefone
-              TextFormField(
-                controller: _controller.telefoneController,
-                decoration:
-                const InputDecoration(labelText: "Telefone Celular"),
-                keyboardType: TextInputType.phone,
-                validator: (value) =>
-                value == null || value.isEmpty ? "Campo obrigatório" : null,
-              ),
-              const SizedBox(height: 10),
-
-              // CEP
-              TextFormField(
-                controller: _controller.cepController,
-                decoration: const InputDecoration(labelText: "CEP"),
-                keyboardType: TextInputType.number,
-                validator: (value) =>
-                value == null || value.isEmpty ? "Campo obrigatório" : null,
-              ),
-              const SizedBox(height: 10),
-
-              // Endereço
-              TextFormField(
-                controller: _controller.enderecoController,
-                decoration: const InputDecoration(labelText: "Endereço"),
-                validator: (value) =>
-                value == null || value.isEmpty ? "Campo obrigatório" : null,
-              ),
-              const SizedBox(height: 10),
-
-              // Número
-              TextFormField(
-                controller: _controller.numeroController,
-                decoration: const InputDecoration(labelText: "Número"),
-                keyboardType: TextInputType.number,
-                validator: (value) =>
-                value == null || value.isEmpty ? "Campo obrigatório" : null,
-              ),
-              const SizedBox(height: 10),
-
-              // Cidade
-              TextFormField(
-                controller: _controller.cidadeController,
-                decoration: const InputDecoration(labelText: "Cidade"),
-                validator: (value) =>
-                value == null || value.isEmpty ? "Campo obrigatório" : null,
-              ),
-              const SizedBox(height: 10),
-
-              // UF
-              DropdownButtonFormField<String>(
-                value: _controller.ufSelecionado,
-                decoration: const InputDecoration(labelText: "Estado (UF)"),
-                items: _ufs
-                    .map((uf) => DropdownMenuItem(
-                  value: uf,
-                  child: Text(uf),
-                ))
-                    .toList(),
-                onChanged: (valor) {
-                  setState(() => _controller.ufSelecionado = valor);
-                },
-                validator: (value) =>
-                value == null ? "Selecione um estado" : null,
-              ),
-              const SizedBox(height: 10),
-
-              // Estado civil
-              DropdownButtonFormField<String>(
-                value: _controller.estadoCivilSelecionado,
-                decoration: const InputDecoration(labelText: "Estado civil"),
-                items: _estadosCivis
-                    .map((ec) => DropdownMenuItem(
-                  value: ec,
-                  child: Text(ec),
-                ))
-                    .toList(),
-                onChanged: (valor) {
-                  setState(() => _controller.estadoCivilSelecionado = valor);
-                },
-                validator: (value) =>
-                value == null ? "Selecione o estado civil" : null,
-              ),
-              const SizedBox(height: 20),
-
-              // Botão de Cadastrar
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF206AA7),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+      appBar: AppBar(title: const Text('Cadastro')),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nomeController,
+                  decoration: _inputDecoration('Nome completo', Icons.person),
+                  validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _cpfController,
+                  decoration: _inputDecoration('CPF', Icons.badge),
+                  validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: _inputDecoration('E-mail', Icons.email),
+                  validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _dataNascController,
+                  decoration: _inputDecoration('Data de Nascimento', Icons.calendar_today),
+                  validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _telefoneController,
+                  decoration: _inputDecoration('Telefone Celular', Icons.phone),
+                  validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _cepController,
+                  decoration: _inputDecoration('CEP', Icons.location_on),
+                  validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _enderecoController,
+                  decoration: _inputDecoration('Endereço', Icons.home),
+                  validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _numeroController,
+                  decoration: _inputDecoration('Número', Icons.format_list_numbered),
+                  validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _cidadeController,
+                  decoration: _inputDecoration('Cidade', Icons.location_city),
+                  validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<String>(
+                  value: _ufSelecionado,
+                  items: _ufs.map((uf) => DropdownMenuItem(value: uf, child: Text(uf))).toList(),
+                  decoration: _inputDecoration('Estado (UF)', Icons.map),
+                  onChanged: (v) => setState(() => _ufSelecionado = v),
+                  validator: (v) => v == null ? 'Selecione um UF' : null,
+                ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<String>(
+                  value: _estadoCivilSelecionado,
+                  items: _estadosCivis.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                  decoration: _inputDecoration('Estado Civil', Icons.people),
+                  onChanged: (v) => setState(() => _estadoCivilSelecionado = v),
+                  validator: (v) => v == null ? 'Selecione um estado civil' : null,
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: _loading ? null : _registrar,
+                    child: _loading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Registrar'),
                   ),
                 ),
-                onPressed: _carregando ? null : _registrar,
-                child: _carregando
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                  "Cadastrar",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
