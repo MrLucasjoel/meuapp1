@@ -24,6 +24,8 @@ class MeuApp extends StatelessWidget {
 
 import 'package:flutter/material.dart';
 import 'package:meuapp/src/app/app_routes.dart';
+import 'package:meuapp/src/theme/font_theme.dart';
+import 'package:meuapp/src/theme/color_theme.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});
@@ -33,7 +35,7 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Meu App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(textTheme: FontTheme.textTheme),
       initialRoute: AppRoutes.login,
       routes: AppRoutes.routes,
     );

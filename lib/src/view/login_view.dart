@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meuapp/src/app/app_routes.dart';
+import 'package:meuapp/src/theme/color_theme.dart';
 import 'package:meuapp/src/view/registro_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -43,7 +44,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[50],
+      backgroundColor: AppColors.background, // Usando cor do color_theme.dart
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -53,7 +54,11 @@ class _LoginViewState extends State<LoginView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Icon(Icons.lock, size: 100, color: Colors.blue),
+                  const Icon(
+                    Icons.lock,
+                    size: 100,
+                    color: AppColors.primary,
+                  ), // Usando cor do color_theme.dart
                   const SizedBox(height: 24),
                   Text(
                     "Bem-vindo",
@@ -70,38 +75,59 @@ class _LoginViewState extends State<LoginView> {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 32),
+
+                  /*
+                  -- email --
+                   */
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: "E-mail",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
                       prefixIcon: const Icon(Icons.email),
+
+                      /* quando o foco não está no campo a borda é cinza */
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.gray), // borda quando NÃO focado
+                      ),
+
+                      /* quando focar no campo a borda muda de cor */
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.primary), // borda QUANDO focado
+                      ),
                     ),
-                    validator: (value) =>
-                    value == null || value.isEmpty ? "Informe o e-mail" : null,
                   ),
                   const SizedBox(height: 16),
+
+                  /*
+                  -- senha --
+                   */
                   TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
+                    controller: _emailController,
                     decoration: InputDecoration(
                       labelText: "Senha",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
                       prefixIcon: const Icon(Icons.lock),
+
+                      /* quando o foco não está no campo a borda é cinza */
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.gray), // borda quando NÃO focado
+                      ),
+
+                      /* quando focar no campo a borda muda de cor */
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.primary), // borda QUANDO focado
+                      ),
                     ),
-                    validator: (value) =>
-                    value == null || value.isEmpty ? "Informe a senha" : null,
                   ),
                   const SizedBox(height: 16),
                   if (_erro != null)
                     Text(
                       _erro!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.red),
+                      style: const TextStyle(color: AppColors.secondary),
                     ),
                   const SizedBox(height: 24),
                   SizedBox(
@@ -115,14 +141,14 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       child: _loading
                           ? const CircularProgressIndicator(
-                        color: Colors.white,
+                        color: AppColors.secondary,
                         strokeWidth: 2,
                       )
                           : const Text(
                           "Entrar",
                           style: TextStyle(
                               fontSize: 18,
-                              color: Colors.black
+                              color: AppColors.secondary
                           )
                       ),
                     ),
@@ -134,7 +160,7 @@ class _LoginViewState extends State<LoginView> {
                       "Não tem conta? Cadastre-se",
                       style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black
+                          color: AppColors.secondary
                       ),
                     ),
                   ),
