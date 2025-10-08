@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MainApp());
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: TelaAppBar(),
+    );
+  }
+}
+
+class TelaAppBar extends StatelessWidget {
+  const TelaAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'DEVS2BLU First App',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red,
+      ),
+      body: Center(
+        child: Text(
+          'E aí galera !!',
+          style: TextStyle(fontSize: 20, color: Colors.blue[400]),
+        ),
+      ),
+    );
+  }
+}
