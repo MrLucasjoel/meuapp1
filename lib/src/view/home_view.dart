@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:meuapp/src/app/app_menu.dart';
 import 'package:meuapp/src/app/app_routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
   State<HomeView> createState() => _HomeViewState();
+}
+
+Future<void> carregarUsuario() async {
+  final prefs = await SharedPreferences.getInstance();
+  final email = prefs.getString('usuario_logado');
+  print('Usuário logado: $email');
 }
 
 class _HomeViewState extends State<HomeView> {

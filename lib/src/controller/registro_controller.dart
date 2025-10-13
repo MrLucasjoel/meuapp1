@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meuapp/src/model/registro_model.dart';
+import 'package:meuapp/src/service/registro_service.dart';
+import 'package:meuapp/src/model/usuario_model.dart' hide UsuarioModel;
 
 class RegistroController {
   final formKey = GlobalKey<FormState>();
@@ -7,17 +9,29 @@ class RegistroController {
   final nomeController = TextEditingController();
   final cpfController = TextEditingController();
   final emailController = TextEditingController();
+  final senhaController = TextEditingController();
   final dataNascController = TextEditingController();
   final telefoneController = TextEditingController();
   final cepController = TextEditingController();
   final enderecoController = TextEditingController();
   final numeroController = TextEditingController();
   final cidadeController = TextEditingController();
+  final RegistroService service = RegistroService();
 
   String? ufSelecionado;
   String? estadoCivilSelecionado;
 
   String? erro;
+
+  Future<bool> registrarUsuario() async {
+    final usuario = validarEConstruirUsuario();
+    if (usuario == null) return false;
+
+    await service.salvarUsuario(usuario.toJson());
+    return true;
+  }
+
+
 
   UsuarioModel? validarEConstruirUsuario() {
     if (formKey.currentState!.validate()) {
@@ -34,6 +48,7 @@ class RegistroController {
         nomeCompleto: nomeController.text.trim(),
         cpf: cpfController.text.trim(),
         email: emailController.text.trim(),
+        senha: senhaController.text.trim(),
         dataNascimento: dataNascController.text.trim(),
         telefone: telefoneController.text.trim(),
         cep: cepController.text.trim(),
@@ -52,6 +67,7 @@ class RegistroController {
     nomeController.clear();
     cpfController.clear();
     emailController.clear();
+    senhaController.clear();
     dataNascController.clear();
     telefoneController.clear();
     cepController.clear();

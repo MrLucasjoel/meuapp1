@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:meuapp/src/app/app_routes.dart';
+import 'package:meuapp/src/controller/login_controller.dart';
 import 'package:meuapp/src/theme/color_theme.dart';
 import 'package:meuapp/src/theme/font_theme.dart';
 import 'package:meuapp/src/view/alteraSenha_view.dart';
 import 'package:meuapp/src/view/registro_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:meuapp/src/model/registro_model.dart';
+import 'package:meuapp/src/controller/login_controller.dart';
+import 'package:meuapp/src/service/registro_service.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -13,16 +19,51 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  late LoginController _controller; // apenas esta linha
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _senhaController = TextEditingController();
 
   bool _loading = false;
   String? _erro;
-
   bool _obscurePassword = true;
 
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa o RegistroService e o LoginController
+    final registroService = RegistroService();
+    _controller = LoginController(registroService);
+  }
+
   void _login() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _loading = true);
+
+    final login = await _controller.autenticar(
+      _emailController.text,
+      _senhaController.text,
+    );
+
+    if (login != null) {
+      // Login válido -> vai pra Home
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } else {
+      // Falhou
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('E-mail ou senha incorretos!')),
+      );
+    }
+
+    if (mounted) setState(() => _loading = false);
+  }
+
+
+  //------------------------simula api------------------------------------------------
+  /*void _login() async {
     setState(() => _loading = true);
     if (!_formKey.currentState!.validate()) return;
 
@@ -46,7 +87,8 @@ class _LoginViewState extends State<LoginView> {
     if (mounted) {
       setState(() => _loading = false);
     }
-  }
+  }*/
+//------------------------simula api------------------------------------------------
 
   void _abrirCadastro() {
     Navigator.push(
@@ -136,7 +178,7 @@ class _LoginViewState extends State<LoginView> {
 
                   // --Campo senha-------
                   TextFormField(
-                    controller: _passwordController,
+                    controller: _senhaController,
                     obscureText: _obscurePassword, //controla se o texto fica escondido
                     decoration: InputDecoration(
                       labelText: "Senha",
