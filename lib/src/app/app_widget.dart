@@ -24,10 +24,13 @@ class MeuApp extends StatelessWidget {
 
 import 'package:flutter/material.dart';
 import 'package:meuapp/src/app/app_routes.dart';
+import 'package:meuapp/src/view/ajuda_view.dart';
+import 'package:meuapp/src/view/configuracoes_view.dart';
 import 'package:meuapp/src/view/home_view.dart';
 import 'package:meuapp/src/theme/font_theme.dart';
 import 'package:meuapp/src/theme/color_theme.dart';
 import 'package:meuapp/src/view/login_view.dart';
+import 'package:meuapp/src/view/perfil_view.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});
@@ -50,9 +53,10 @@ class AppWidget extends StatelessWidget {
       initialRoute: AppRoutes.login,
       routes: {
         AppRoutes.login: (context) => const LoginView(),
-        //AppRoutes.bottomNav: (context) => const MeuBottomNavigationBar(),
         AppRoutes.home: (context) => const HomeView(),
-
+        AppRoutes.perfil: (context) => const PerfilView(),
+        AppRoutes.configuracoes: (context) => const ConfiguracoesView(),
+        AppRoutes.ajuda: (context) => const AjudaView(),
       },
     );
   }

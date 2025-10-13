@@ -22,6 +22,7 @@ class _LoginViewState extends State<LoginView> {
   bool _obscurePassword = true;
 
   void _login() async {
+    setState(() => _loading = true);
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -35,9 +36,10 @@ class _LoginViewState extends State<LoginView> {
     // Login "fake" de exemplo
     if (_emailController.text == "admin" && _passwordController.text == "12345") {
       if (mounted) {
-        // 🔥 Aqui é o ponto principal da correção:
+        // Aqui é o ponto principal da correção:
         // Agora vai para o "MeuBottomNavigationBar" (tela principal)
-        Navigator.pushReplacementNamed(context, AppRoutes.bottomNav);
+        //Navigator.pushReplacementNamed(context, AppRoutes.bottomNav);
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
       }
     } else {
       setState(() => _erro = "Usuário ou senha inválidos");

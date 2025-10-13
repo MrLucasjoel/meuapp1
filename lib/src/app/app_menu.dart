@@ -73,21 +73,23 @@ class MeuDrawer extends StatelessWidget {
                     icon: Icons.person_outline,
                     title: 'Perfil',
                     onTap: () {
-                      Navigator.pushNamed(context, '/profile');
+                      Navigator.pushNamed(context, AppRoutes.perfil);
                     },
                   ),
                   _MenuItem(
                     icon: Icons.settings_outlined,
                     title: 'Configurações',
                     onTap: () {
-                      Navigator.pushNamed(context, '/settings');
+                      Navigator.pushNamed(context, AppRoutes.configuracoes);
                     },
                   ),
                   const Divider(),
                   _MenuItem(
                     icon: Icons.help_outline,
                     title: 'Ajuda',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRoutes.ajuda);
+                    },
                   ),
                 ],
               ),

@@ -13,6 +13,7 @@ class _MeuBottomNavigationBarState extends State<MeuBottomNavigationBar> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
+    print("Item $index tapped");
     setState(() {
       _selectedIndex = index;
     });
@@ -22,10 +23,10 @@ class _MeuBottomNavigationBarState extends State<MeuBottomNavigationBar> {
         Navigator.pushReplacementNamed(context, AppRoutes.home);
         break;
       case 1:
-        Navigator.pushNamed(context, '/profile');
+        Navigator.pushReplacementNamed(context, AppRoutes.perfil);
         break;
       case 2:
-        Navigator.pushNamed(context, '/settings');
+        Navigator.pushReplacementNamed(context, AppRoutes.configuracoes);
         break;
     }
   }
@@ -40,7 +41,7 @@ class _MeuBottomNavigationBarState extends State<MeuBottomNavigationBar> {
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Config"),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Configurações"),
       ],
     );
   }
