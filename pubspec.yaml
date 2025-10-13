@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.5.3
-  google_fonts: ^6.2.1
+  google_fonts: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -19,3 +19,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    -  assets/imagens/perfil.jpg

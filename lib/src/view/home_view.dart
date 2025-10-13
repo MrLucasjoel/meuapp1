@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:meuapp/src/app/app_menu.dart';
 import 'package:meuapp/src/app/app_routes.dart';
+import 'package:meuapp/src/widget/bottom_nav.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Home')),
+      drawer: const MeuDrawer(), // menu lateral
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -26,6 +34,7 @@ class HomeView extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: const  MeuBottomNavigationBar(), // menu inferior
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meuapp/src/app/app_routes.dart';
 import 'package:meuapp/src/theme/color_theme.dart';
+import 'package:meuapp/src/theme/font_theme.dart';
 import 'package:meuapp/src/view/registro_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -18,20 +19,33 @@ class _LoginViewState extends State<LoginView> {
   bool _loading = false;
   String? _erro;
 
-  void _login() {
+  bool _obscurePassword = true;
+
+  void _login() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _loading = true);
-
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() => _loading = false);
-
-      if (_emailController.text == "admin" && _passwordController.text == "12345") {
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
-      } else {
-        setState(() => _erro = "Usuário ou senha inválidos");
-      }
+    setState(() {
+      _loading = true;
+      _erro = null;
     });
+
+    // Simula uma requisição (ex: API ou banco)
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Login "fake" de exemplo
+    if (_emailController.text == "admin" && _passwordController.text == "12345") {
+      if (mounted) {
+        // 🔥 Aqui é o ponto principal da correção:
+        // Agora vai para o "MeuBottomNavigationBar" (tela principal)
+        Navigator.pushReplacementNamed(context, AppRoutes.bottomNav);
+      }
+    } else {
+      setState(() => _erro = "Usuário ou senha inválidos");
+    }
+
+    if (mounted) {
+      setState(() => _loading = false);
+    }
   }
 
   void _abrirCadastro() {
@@ -44,7 +58,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background, // Usando cor do color_theme.dart
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -55,11 +69,24 @@ class _LoginViewState extends State<LoginView> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Icon(
-                    Icons.lock,
-                    size: 100,
-                    color: AppColors.primary,
-                  ), // Usando cor do color_theme.dart
+                    Icons.skip_next_outlined,
+                    size: 150,
+                    color: AppColors.primaryVariant,
+                  ),
                   const SizedBox(height: 24),
+                  Text(
+                    "NextI9",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.merge(AppFonts.headlineSmall)
+                        .copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   Text(
                     "Bem-vindo",
                     textAlign: TextAlign.center,
@@ -76,53 +103,67 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 32),
 
-                  /*
-                  -- email --
-                   */
+                  // --Campo e-mail-------
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: "E-mail",
                       prefixIcon: const Icon(Icons.email),
-
-                      /* quando o foco não está no campo a borda é cinza */
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColors.gray), // borda quando NÃO focado
+                        borderSide: BorderSide(color: AppColors.gray),
                       ),
-
-                      /* quando focar no campo a borda muda de cor */
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColors.primary), // borda QUANDO focado
+                        borderSide: BorderSide(color: AppColors.primaryVariant),
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Digite seu e-mail";
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 16),
 
-                  /*
-                  -- senha --
-                   */
+                  // --Campo senha-------
                   TextFormField(
-                    controller: _emailController,
+                    controller: _passwordController,
+                    obscureText: _obscurePassword, //controla se o texto fica escondido
                     decoration: InputDecoration(
                       labelText: "Senha",
                       prefixIcon: const Icon(Icons.lock),
-
-                      /* quando o foco não está no campo a borda é cinza */
+                      suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                            color: AppColors.secondary,
+                          ),
+                        onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword; //alterna o olho
+                            });
+                        },
+                      ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColors.gray), // borda quando NÃO focado
+                        borderSide: BorderSide(color: AppColors.gray),
                       ),
-
-                      /* quando focar no campo a borda muda de cor */
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColors.primary), // borda QUANDO focado
+                        borderSide: BorderSide(color: AppColors.primaryVariant),
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Digite sua senha";
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 16),
+
+                  // Mensagem de erro
                   if (_erro != null)
                     Text(
                       _erro!,
@@ -130,11 +171,14 @@ class _LoginViewState extends State<LoginView> {
                       style: const TextStyle(color: AppColors.secondary),
                     ),
                   const SizedBox(height: 24),
+
+                  // Botão de login
                   SizedBox(
                     height: 50,
                     child: ElevatedButton(
                       onPressed: _loading ? null : _login,
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryVariant,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -145,22 +189,24 @@ class _LoginViewState extends State<LoginView> {
                         strokeWidth: 2,
                       )
                           : const Text(
-                          "Entrar",
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: AppColors.secondary
-                          )
+                        "Entrar",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppColors.secondary,
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 12),
+
+                  // Botão de cadastro
                   TextButton(
                     onPressed: _abrirCadastro,
                     child: const Text(
                       "Não tem conta? Cadastre-se",
                       style: TextStyle(
-                          fontSize: 15,
-                          color: AppColors.secondary
+                        fontSize: 15,
+                        color: AppColors.secondary,
                       ),
                     ),
                   ),
@@ -173,3 +219,4 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
+
