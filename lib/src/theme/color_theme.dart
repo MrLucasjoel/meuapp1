@@ -5,7 +5,7 @@ class AppColors {
   static const Color primary = Color(0xFF1BC287);
   static const Color primaryVariant = Color(0xFF289094);
   static const Color secondary = Color(0xFF000000);
-  static const Color secondaryVariant = Color(0xFF000000);
+  static const Color secondaryVariant = Color(0xFFFFFFFF);
 
   // Neutros
   static const Color background = Color(0xFFD0EAD8);

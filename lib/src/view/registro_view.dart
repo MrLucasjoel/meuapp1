@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meuapp/src/theme/color_theme.dart';
 
 class RegistroView extends StatefulWidget {
   const RegistroView({super.key});
@@ -61,7 +62,9 @@ class _RegistroViewState extends State<RegistroView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Cadastro')),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(title: const Text('Cadastro'),
+        backgroundColor: AppColors.background,),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -75,54 +78,63 @@ class _RegistroViewState extends State<RegistroView> {
                   validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 12),
+
                 TextFormField(
                   controller: _cpfController,
                   decoration: _inputDecoration('CPF', Icons.badge),
                   validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 12),
+
                 TextFormField(
                   controller: _emailController,
                   decoration: _inputDecoration('E-mail', Icons.email),
                   validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 12),
+
                 TextFormField(
                   controller: _dataNascController,
                   decoration: _inputDecoration('Data de Nascimento', Icons.calendar_today),
                   validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 12),
+
                 TextFormField(
                   controller: _telefoneController,
                   decoration: _inputDecoration('Telefone Celular', Icons.phone),
                   validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 12),
+
                 TextFormField(
                   controller: _cepController,
                   decoration: _inputDecoration('CEP', Icons.location_on),
                   validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 12),
+
                 TextFormField(
                   controller: _enderecoController,
                   decoration: _inputDecoration('Endereço', Icons.home),
                   validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 12),
+
                 TextFormField(
                   controller: _numeroController,
                   decoration: _inputDecoration('Número', Icons.format_list_numbered),
                   validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 12),
+
                 TextFormField(
                   controller: _cidadeController,
                   decoration: _inputDecoration('Cidade', Icons.location_city),
                   validator: (v) => v!.isEmpty ? 'Campo obrigatório' : null,
                 ),
                 const SizedBox(height: 12),
+
                 DropdownButtonFormField<String>(
                   value: _ufSelecionado,
                   items: _ufs.map((uf) => DropdownMenuItem(value: uf, child: Text(uf))).toList(),
@@ -131,6 +143,7 @@ class _RegistroViewState extends State<RegistroView> {
                   validator: (v) => v == null ? 'Selecione um UF' : null,
                 ),
                 const SizedBox(height: 12),
+
                 DropdownButtonFormField<String>(
                   value: _estadoCivilSelecionado,
                   items: _estadosCivis.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
@@ -139,14 +152,24 @@ class _RegistroViewState extends State<RegistroView> {
                   validator: (v) => v == null ? 'Selecione um estado civil' : null,
                 ),
                 const SizedBox(height: 24),
+
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryVariant,
+                    ),
                     onPressed: _loading ? null : _registrar,
                     child: _loading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('Registrar'),
+                        ? const CircularProgressIndicator(
+                    )
+                        : const Text(
+                        'Registrar',
+                      style: TextStyle(
+                          color: AppColors.secondary
+                      ),
+                    ),
                   ),
                 ),
               ],

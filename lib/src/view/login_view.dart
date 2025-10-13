@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meuapp/src/app/app_routes.dart';
 import 'package:meuapp/src/theme/color_theme.dart';
 import 'package:meuapp/src/theme/font_theme.dart';
+import 'package:meuapp/src/view/alteraSenha_view.dart';
 import 'package:meuapp/src/view/registro_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -36,9 +37,6 @@ class _LoginViewState extends State<LoginView> {
     // Login "fake" de exemplo
     if (_emailController.text == "admin" && _passwordController.text == "12345") {
       if (mounted) {
-        // Aqui é o ponto principal da correção:
-        // Agora vai para o "MeuBottomNavigationBar" (tela principal)
-        //Navigator.pushReplacementNamed(context, AppRoutes.bottomNav);
         Navigator.pushReplacementNamed(context, AppRoutes.home);
       }
     } else {
@@ -54,6 +52,13 @@ class _LoginViewState extends State<LoginView> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const RegistroView()),
+    );
+  }
+
+  void _alteraSenha() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const AlteraSenhaView()),
     );
   }
 
@@ -206,6 +211,16 @@ class _LoginViewState extends State<LoginView> {
                     onPressed: _abrirCadastro,
                     child: const Text(
                       "Não tem conta? Cadastre-se",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: AppColors.secondary,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: _alteraSenha,
+                    child: const Text(
+                      "Esqueceu a senha?",
                       style: TextStyle(
                         fontSize: 15,
                         color: AppColors.secondary,
