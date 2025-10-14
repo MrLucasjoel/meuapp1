@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class UsuarioModel {
   int? id;
-  String nome;
+  String nomeCompleto;
   String cpf;
   String email;
   String senha;
@@ -17,7 +17,7 @@ class UsuarioModel {
 
   UsuarioModel({
     this.id,
-    required this.nome,
+    required this.nomeCompleto,
     required this.cpf,
     required this.email,
     required this.senha,
@@ -34,7 +34,7 @@ class UsuarioModel {
   factory UsuarioModel.fromJson(Map<String, dynamic> json) {
     return UsuarioModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? ''),
-      nome: json['nome'] ?? '',
+      nomeCompleto: json['nome'] ?? '',
       cpf: json['cpf'] ?? '',
       email: json['email'] ?? '',
       senha: json['senha'] ?? '',
@@ -52,7 +52,7 @@ class UsuarioModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'nome': nome,
+      'nome': nomeCompleto,
       'cpf': cpf,
       'email': email,
       'senha': senha,

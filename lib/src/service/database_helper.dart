@@ -19,11 +19,11 @@ class DatabaseHelper {
 
   Future<Database> _initDb() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'usuarios.db');
+    final path = join(dbPath, 'usuarios1.db');
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
     );
   }
@@ -37,6 +37,7 @@ class DatabaseHelper {
         email TEXT,
         senha TEXT,
         dataNascimento TEXT,
+        dataNasc TEXT,
         telefone TEXT,
         cep TEXT,
         endereco TEXT,
@@ -97,5 +98,12 @@ class DatabaseHelper {
     final db = await database;
     await db.delete('usuarios');
     print('🧹 Todos os usuários foram removidos');
+  }
+
+  // 🔥 Novo metodo para apagar o banco antigo
+  Future<void> resetarBanco() async {
+    final path = join(await getDatabasesPath(), 'usuarios.db');
+    await deleteDatabase(path);
+    print('🗑️ Banco de dados resetado com sucesso!');
   }
 }

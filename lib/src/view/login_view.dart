@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:meuapp/src/app/app_routes.dart';
 import 'package:meuapp/src/controller/login_controller.dart';
+import 'package:meuapp/src/service/registro_service.dart';
 import 'package:meuapp/src/theme/color_theme.dart';
 import 'package:meuapp/src/theme/font_theme.dart';
+import 'package:meuapp/src/user/usuario_service.dart';
 import 'package:meuapp/src/view/alteraSenha_view.dart';
 import 'package:meuapp/src/view/registro_view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:meuapp/src/model/registro_model.dart';
 import 'package:meuapp/src/controller/login_controller.dart';
-import 'package:meuapp/src/service/registro_service.dart';
+import 'package:meuapp/src/view/home_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -19,8 +18,9 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  late LoginController _controller; // apenas esta linha
+  late LoginController _controller;
   final _formKey = GlobalKey<FormState>();
+
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
 
@@ -31,40 +31,11 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     super.initState();
-    // Inicializa o RegistroService e o LoginController
     final registroService = RegistroService();
     _controller = LoginController(registroService);
   }
 
-  void _login() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() => _loading = true);
-
-    final login = await _controller.autenticar(
-      _emailController.text,
-      _senhaController.text,
-    );
-
-    if (login != null) {
-      // Login válido -> vai pra Home
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
-      }
-    } else {
-      // Falhou
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('E-mail ou senha incorretos!')),
-      );
-    }
-
-    if (mounted) setState(() => _loading = false);
-  }
-
-
-  //------------------------simula api------------------------------------------------
-  /*void _login() async {
-    setState(() => _loading = true);
+  Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -72,23 +43,31 @@ class _LoginViewState extends State<LoginView> {
       _erro = null;
     });
 
-    // Simula uma requisição (ex: API ou banco)
-    await Future.delayed(const Duration(seconds: 2));
+    final email = _emailController.text.trim();
+    final senha = _senhaController.text.trim();
 
-    // Login "fake" de exemplo
-    if (_emailController.text == "admin" && _passwordController.text == "12345") {
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
-      }
-    } else {
-      setState(() => _erro = "Usuário ou senha inválidos");
-    }
-
-    if (mounted) {
+    // Login do ADMIN (fixo)
+    if (email == "admin@nexti9.com" && senha == "admin123") {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
       setState(() => _loading = false);
+      return;
     }
-  }*/
-//------------------------simula api------------------------------------------------
+
+    // Login de usuário normal
+    final login = await _controller.autenticar(email, senha);
+
+    if (login != null) {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
+    } else {
+      setState(() {
+        _erro = "E-mail ou senha incorretos!";
+      });
+    }
+
+    setState(() => _loading = false);
+  }
 
   void _abrirCadastro() {
     Navigator.push(
@@ -97,7 +76,7 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  void _alteraSenha() {
+  void _abrirAlteraSenha() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const AlteraSenhaView()),
@@ -119,10 +98,10 @@ class _LoginViewState extends State<LoginView> {
                 children: [
                   const Icon(
                     Icons.skip_next_outlined,
-                    size: 150,
+                    size: 180,
                     color: AppColors.primaryVariant,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 15),
                   Text(
                     "NextI9",
                     textAlign: TextAlign.center,
@@ -152,7 +131,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 32),
 
-                  // --Campo e-mail-------
+                  // Campo e-mail
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -164,7 +143,8 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColors.primaryVariant),
+                        borderSide:
+                        BorderSide(color: AppColors.primaryVariant),
                       ),
                     ),
                     validator: (value) {
@@ -176,22 +156,24 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 16),
 
-                  // --Campo senha-------
+                  // Campo senha
                   TextFormField(
                     controller: _senhaController,
-                    obscureText: _obscurePassword, //controla se o texto fica escondido
+                    obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: "Senha",
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                            color: AppColors.secondary,
-                          ),
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: AppColors.secondary,
+                        ),
                         onPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword; //alterna o olho
-                            });
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
                         },
                       ),
                       enabledBorder: OutlineInputBorder(
@@ -200,7 +182,8 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColors.primaryVariant),
+                        borderSide:
+                        BorderSide(color: AppColors.primaryVariant),
                       ),
                     ),
                     validator: (value) {
@@ -212,7 +195,6 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Mensagem de erro
                   if (_erro != null)
                     Text(
                       _erro!,
@@ -248,7 +230,6 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Botão de cadastro
                   TextButton(
                     onPressed: _abrirCadastro,
                     child: const Text(
@@ -260,7 +241,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   TextButton(
-                    onPressed: _alteraSenha,
+                    onPressed: _abrirAlteraSenha,
                     child: const Text(
                       "Esqueceu a senha?",
                       style: TextStyle(
@@ -278,4 +259,3 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
-

@@ -49,6 +49,7 @@ class RegistroService {
     print('✅ Usuário salvo no SQLite');
   }
 
+
   /// Retorna todos os usuários cadastrados
   Future<List<Map<String, dynamic>>> listarUsuarios() async {
     final db = await database;
